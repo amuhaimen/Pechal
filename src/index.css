@@ -76,3 +76,120 @@
 .loadingbutton {
   background: rgba(97, 97, 97, 0.422) !important;
 }
+
+.sidebarbox {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 90%;
+  height: 98vh;
+  background: #5f35f5;
+  border-radius: 20px;
+  padding: 38px 43px;
+  box-sizing: border-box;
+}
+
+.imgholder {
+  display: flex;
+  justify-content: center;
+}
+
+.logouticon {
+  font-size: 46px;
+  color: black;
+}
+
+.icon {
+  font-size: 46px;
+  color: #fff;
+}
+.iconholder {
+  margin-top: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  padding: 13px 20px;
+}
+
+.titleholder {
+  display: flex;
+  justify-content: space-between;
+}
+
+.groupholder {
+  padding: 13px 20px;
+  background: #fff;
+  height: 400px;
+  border-radius: 20px;
+  -webkit-box-shadow: 1px 0px 23px -6px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 1px 0px 23px -6px rgba(0, 0, 0, 0.75);
+  box-shadow: 1px 0px 23px -6px rgba(0, 0, 0, 0.75);
+  margin-top: 15px;
+  overflow-y: scroll;
+  margin-bottom: 70px;
+}
+
+.titleholder {
+  display: flex;
+  justify-content: space-between;
+}
+
+.titleholder button {
+  padding: 10px;
+  background: #5f35f5;
+  color: #fff;
+  font-weight: 500;
+  border-radius: 10px;
+  border: 0;
+}
+.boxholder {
+  margin-top: 15px;
+}
+
+.box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #767676;
+  padding: 10px;
+}
+
+.box :last-child {
+  border: 0px;
+}
+
+.boxbtn {
+  padding: 10px;
+  background: #5f35f5;
+  color: #fff;
+  font-weight: 500;
+  border-radius: 10px;
+  border: 0;
+  margin: 0 10px;
+}
+
+.boximgholder {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+.boximgholder img {
+  width: 100%;
+}
+
+.profile-pic {
+  cursor: pointer;
+}
+
+.img-preview {
+  width: 70px !important;
+  height: 70px !important;
+  overflow: hidden;
+  border-radius: 50%;
+}

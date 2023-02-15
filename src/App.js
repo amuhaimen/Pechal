@@ -9,13 +9,18 @@ import {
   Link,
 } from "react-router-dom";
 import Home from "./pages/Home";
+import RootLayout from "./components/RootLayout";
+import Message from "./pages/Message";
 
 let router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Registration />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/home" element={<Home />} />
+      <Route path="pechal" element={<RootLayout />}>
+        <Route index element={<Home />} />
+        <Route path="message" element={<Message />} />
+      </Route>
     </>
   )
 );

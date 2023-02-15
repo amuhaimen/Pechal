@@ -13,10 +13,12 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getDatabase, ref, set } from "firebase/database";
 
 const CommonButton = styled(Button)({
   width: "100%",
@@ -35,6 +37,7 @@ const CommonButton = styled(Button)({
 });
 
 const Registration = () => {
+  const db = getDatabase();
   let navigate = useNavigate();
   const auth = getAuth();
   let [show, setShow] = useState(false);
@@ -50,7 +53,7 @@ const Registration = () => {
     password: "",
   });
 
-  let handleClick = () => {
+  let handleClick = (e) => {
     setLoader(true);
     let expression =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -68,13 +71,25 @@ const Registration = () => {
       setError({ ...error, password: "Passwosrd Required" });
     } else {
       createUserWithEmailAndPassword(auth, formData.email, formData.password)
-        .then(() => {
+        .then((user) => {
           sendEmailVerification(auth.currentUser).then(() => {
-            toast("Registration Successful, please check yousr email");
-            setTimeout(() => {
-              setLoader(false);
-              navigate("/login");
-            }, 2000);
+            console.log(user);
+            //database e data pathanor jonno update photo proyojon hoy
+            updateProfile(auth.currentUser, {
+              displayName: formData.name,
+              // photoURL: "https://example.com/jane-q-user/profile.jpg"
+            }).then(() => {
+              set(ref(db, "users/" + user.user.uid), {
+                displayName: user.user.displayName,
+                email: user.user.email,
+              }).then(() => {
+                toast("Registration Successful, please check yousr email");
+                setTimeout(() => {
+                  setLoader(false);
+                  navigate("/login");
+                }, 2000);
+              });
+            });
           });
         })
         .catch((e) => {

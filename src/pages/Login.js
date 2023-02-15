@@ -9,10 +9,21 @@ import Button from "@mui/material/Button";
 import AuthenticationLink from "../components/AuthenticationLink";
 import Alert from "@mui/material/Alert";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { activeUser } from "../slices/userSlice";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
 
 const CommonButton = styled(Button)({
   width: "100%",
@@ -29,20 +40,61 @@ const CommonButton = styled(Button)({
   },
 });
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 const Login = () => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   let navigate = useNavigate();
   const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+  let dispatch = useDispatch();
   let [show, setShow] = useState(false);
   let [loader, setLoader] = useState(false);
   let [formData, setFormData] = useState({
     email: "",
     password: "",
+    fgp: "",
   });
 
   let [error, setError] = useState({
     email: "",
     password: "",
+    fgp: "",
   });
+
+  let handleGoogle = () => {
+    signInWithPopup(auth, provider).then((result) => {});
+  };
+
+  let handleFgp = () => {
+    sendPasswordResetEmail(auth, formData.fgp)
+      .then(() => {
+        toast("email sent, please check your email");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        if (errorCode.includes("auth/user-not-found")) {
+          setError({ ...error, fgp: "user not found" });
+        }
+
+        console.log(errorCode);
+        console.log(errorMessage);
+      });
+  };
 
   let handleClick = () => {
     setLoader(true);
@@ -60,9 +112,14 @@ const Login = () => {
     } else {
       signInWithEmailAndPassword(auth, formData.email, formData.password)
         .then((userCredential) => {
-          console.log(userCredential);
+          dispatch(activeUser(userCredential.user));
+          localStorage.setItem("userInfo", JSON.stringify(userCredential.user));
           if (userCredential.user.emailVerified) {
-            navigate("/home");
+            toast("Successfully login");
+            setTimeout(() => {
+              setLoader(false);
+              navigate("/pechal");
+            }, 2000);
           } else {
             setLoader(false);
             toast("varify your email and try again");
@@ -72,9 +129,11 @@ const Login = () => {
           const errorCode = error.code;
           const errorMessage = error.message;
           if (errorCode.includes("auth/user-not-found")) {
+            setLoader(false);
             setError({ ...error, email: "user Not found" });
           }
           if (errorMessage.includes("auth/wrong-password")) {
+            setLoader(false);
             setError({ ...error, password: "wrong password ,try again" });
           }
         });
@@ -111,7 +170,11 @@ const Login = () => {
                   title="Login to your account"
                   as="h2"
                 />
-                <img style={{ marginTop: "30px" }} src="assets/google.png" />
+                <img
+                  onClick={handleGoogle}
+                  style={{ marginTop: "30px" }}
+                  src="assets/google.png"
+                />
               </Header>
               <div className="inputboxcontainer">
                 <InputBox
@@ -156,7 +219,7 @@ const Login = () => {
                 {loader ? (
                   <PButton
                     className="loadingbutton"
-                    title="Loading"
+                    title="Loading..."
                     bname={CommonButton}
                   />
                 ) : (
@@ -173,6 +236,7 @@ const Login = () => {
                   href="/"
                   hreftitle=" Sign up"
                 />
+                <Button onClick={handleOpen}>Forgot Password?</Button>
               </div>
             </div>
           </div>
@@ -180,6 +244,40 @@ const Login = () => {
         <Grid item xs={6}>
           <img className="regimg" src="assets/loginimg.png" />
         </Grid>
+        <div>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Forgot Password ?
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                <InputBox
+                  name="fgp"
+                  textChange={handleLogin}
+                  className="reginput"
+                  label="Email"
+                  variant="standard"
+                  type="email"
+                />
+                {error.fgp && (
+                  <Alert className="error" variant="outlined" severity="error">
+                    {error.fgp}
+                  </Alert>
+                )}
+                <PButton
+                  click={handleFgp}
+                  title="Send Email"
+                  bname={CommonButton}
+                />
+              </Typography>
+            </Box>
+          </Modal>
+        </div>
       </Grid>
     </>
   );
