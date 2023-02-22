@@ -15,7 +15,7 @@ const FriendRequest = () => {
   let [freq, setFreq] = useState([]);
 
   let data = useSelector((state) => state);
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
     const starCountRef = ref(db, "friendrequest");
@@ -40,7 +40,7 @@ const FriendRequest = () => {
     set(push(ref(db, "friends")), {
       ...item,
     }).then(() => {
-      remove(ref(db, "friendrequest")).then(() => {
+      remove(ref(db, "friendrequest/" + item.id)).then(() => {
         console.log("Accepted");
       });
     });
@@ -60,7 +60,7 @@ const FriendRequest = () => {
               </div>
               <div className="title">
                 <h3>{item.sendername}</h3>
-                <p>hello</p>
+                <p>{item.senderemail}</p>
               </div>
               <div>
                 <button

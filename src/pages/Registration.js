@@ -74,7 +74,7 @@ const Registration = () => {
         .then((user) => {
           sendEmailVerification(auth.currentUser).then(() => {
             console.log(user);
-            //database e data pathanor jonno update photo proyojon hoy
+            //database e data pathanor jonno update profile proyojon hoy
             updateProfile(auth.currentUser, {
               displayName: formData.name,
               // photoURL: "https://example.com/jane-q-user/profile.jpg"
@@ -97,6 +97,7 @@ const Registration = () => {
           // const errorMessage = error.message;
 
           if (errorCode.includes("auth/email-already-in-use")) {
+            setLoader(false);
             setError({ ...error, email: "Email Already Exists" });
           }
         });

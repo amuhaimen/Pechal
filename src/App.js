@@ -34,3 +34,12 @@ function App() {
 }
 //next task from(class-37,part-2)
 export default App;
+
+//Deu Work================================//
+//1. Member Request Accept,
+//2.Member Request Delete,
+//3.Show Group Members on Info Modal,
+//4.Friend Request Cancel,
+//5.Unfriend,
+//6.Remove Group Members and Block Group Members,
+//7.Search.

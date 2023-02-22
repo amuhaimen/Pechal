@@ -26,6 +26,7 @@ import { getAuth, updateProfile } from "firebase/auth";
 import { borderRadius, width } from "@mui/system";
 import { useDispatch } from "react-redux";
 import { activeUser } from "../slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -40,10 +41,11 @@ const style = {
 };
 
 const RootLayout = () => {
+  let navigate = useNavigate();
   let dispatch = useDispatch();
   const auth = getAuth();
   let data = useSelector((state) => state);
-  console.log(data.userdata.userInfo);
+  // console.log(data.userdata.userInfo);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -54,6 +56,13 @@ const RootLayout = () => {
   const [profile, setProfile] = useState();
   const [cropData, setCropData] = useState("#");
   const [cropper, setCropper] = useState();
+
+  let handlehome = () => {
+    navigate("/pechal");
+  };
+  let handlemessage = () => {
+    navigate("message");
+  };
 
   const onChange = (e) => {
     e.preventDefault();
@@ -127,8 +136,8 @@ const RootLayout = () => {
               </div>
               <h3>{data.userdata.userInfo.displayName}</h3>
               <div className="iconholder">
-                <AiOutlineHome className="icon" />
-                <AiOutlineMessage className="icon" />
+                <AiOutlineHome onClick={handlehome} className="icon" />
+                <AiOutlineMessage onClick={handlemessage} className="icon" />
                 <IoMdNotificationsOutline className="icon" />
                 <AiTwotoneSetting className="icon" />
                 <AiOutlineLogin className="logouticon" />

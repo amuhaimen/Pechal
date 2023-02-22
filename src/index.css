@@ -106,6 +106,7 @@
 .icon {
   font-size: 46px;
   color: #fff;
+  cursor: pointer;
 }
 .iconholder {
   margin-top: 60px;

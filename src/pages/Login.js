@@ -225,7 +225,7 @@ const Login = () => {
                 ) : (
                   <PButton
                     click={handleClick}
-                    title="Continue to google"
+                    title="Continue to Login"
                     bname={CommonButton}
                   />
                 )}

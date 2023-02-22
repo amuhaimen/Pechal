@@ -7,9 +7,11 @@ const Userlist = () => {
   let [userlist, setUserlist] = useState([]);
   let [freq, setFreq] = useState([]);
   let [friends, setFriends] = useState([]);
+  let [blocklist, setBlocklist] = useState([]);
   let data = useSelector((state) => state);
-  console.log(data.userdata.userInfo.uid);
+  // console.log(data.userdata.userInfo.uid);
 
+  //==========userlist e user show korano start====================
   useEffect(() => {
     const userRef = ref(db, "users");
     onValue(userRef, (snapshot) => {
@@ -17,11 +19,25 @@ const Userlist = () => {
       snapshot.forEach((item) => {
         if (data.userdata.userInfo.uid != item.key) {
           arr.push({ ...item.val(), id: item.key });
+          // console.log(item.val());
         }
       });
       setUserlist(arr);
     });
   }, []);
+  //==================userlist e user show korano end=================
+
+  let handlefriendRequest = (info) => {
+    set(push(ref(db, "friendrequest")), {
+      sendername: data.userdata.userInfo.displayName,
+      senderid: data.userdata.userInfo.uid,
+      senderemail: data.userdata.userInfo.email,
+      receivername: info.displayName,
+      receiverid: info.id,
+      receiveremail: info.email,
+    });
+    // console.log(info);
+  };
 
   useEffect(() => {
     const userRef = ref(db, "friendrequest");
@@ -29,6 +45,7 @@ const Userlist = () => {
       let arr = [];
       snapshot.forEach((item) => {
         arr.push(item.val().receiverid + item.val().senderid);
+        // console.log(item.val().receiverid + item.val().senderid);
       });
       setFreq(arr);
     });
@@ -45,15 +62,17 @@ const Userlist = () => {
     });
   }, []);
 
-  let handlefriendRequest = (info) => {
-    set(push(ref(db, "friendrequest")), {
-      sendername: data.userdata.userInfo.displayName,
-      senderid: data.userdata.userInfo.uid,
-      receivername: info.displayName,
-      receiverid: info.id,
+  useEffect(() => {
+    const userRef = ref(db, "block");
+    onValue(userRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push(item.val().blockid + item.val().blockbyid);
+      });
+      setBlocklist(arr);
     });
-    console.log(info);
-  };
+  }, []);
+
   return (
     <div className="groupholder">
       <div className="titleholder">
@@ -61,6 +80,7 @@ const Userlist = () => {
       </div>
       <div className="boxholder">
         {userlist.map((item) => (
+          //uporer (item,index) er shathe ekta unique key prop dite hobe jeta to do te ache ,taile r error dibe na
           <div className="box">
             <div className="boximgholder">
               <img src="./assets/profilepic.png" />
@@ -76,6 +96,9 @@ const Userlist = () => {
               ) : freq.includes(item.id + data.userdata.userInfo.uid) ||
                 freq.includes(data.userdata.userInfo.uid + item.id) ? (
                 <button className="boxbtn">pending</button>
+              ) : blocklist.includes(item.id + data.userdata.userInfo.uid) ||
+                blocklist.includes(data.userdata.userInfo.uid + item.id) ? (
+                <button className="boxbtn">blocked</button>
               ) : (
                 <button
                   onClick={() => handlefriendRequest(item)}

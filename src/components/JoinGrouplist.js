@@ -20,7 +20,7 @@ const style = {
   p: 4,
 };
 
-const Grouplist = () => {
+const JoinGrouplist = () => {
   const db = getDatabase();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -160,4 +160,4 @@ const Grouplist = () => {
   );
 };
 
-export default Grouplist;
+export default JoinGrouplist;
