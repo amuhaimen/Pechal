@@ -43,7 +43,7 @@ const style = {
 const RootLayout = () => {
   let navigate = useNavigate();
   let dispatch = useDispatch();
-  const auth = getAuth();
+  const auth = getAuth();                  
   let data = useSelector((state) => state);
   // console.log(data.userdata.userInfo);
 
